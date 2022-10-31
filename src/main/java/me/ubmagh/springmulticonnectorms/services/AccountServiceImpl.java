@@ -32,14 +32,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountResponseDTO getAccountById(String accountId) throws AccountIdNotFoundException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
-        account.setProfile_visits( account.getProfile_visits()+1 );
+        if( account.isActivated())
+            account.setProfile_visits( account.getProfile_visits()+1 );
         return mapper.fromAccount(account);
     }
 
     @Override
     public AccountResponseDTO getAccountByUsername(String Username) throws AccountUsernameNotFoundException {
         Account account = accountRepository.findByUsername( Username ).orElseThrow(() -> new AccountUsernameNotFoundException(Username));
-        account.setProfile_visits( account.getProfile_visits()+1 );
+        if( account.isActivated())
+            account.setProfile_visits( account.getProfile_visits()+1 );
         return mapper.fromAccount(account);
     }
 

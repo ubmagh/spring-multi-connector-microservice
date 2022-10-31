@@ -1,0 +1,46 @@
+type Query {
+    getAcountsList : [AccountResponseDTO],
+    getAcount ( accountId:String): AccountResponseDTO,
+    getAcountByUsername ( username:String): AccountResponseDTO,
+    getAccountsTypes : [String],
+}
+
+type Mutation {
+    createAccount ( request:AccountRequestDTO): AccountResponseDTO,
+    updateAccount ( accountId:String, requestDTO:AccountRequestDTO): AccountResponseDTO,
+    deleteAccount ( accountId:String ): AccountResponseDTO,
+    following ( acc1:String, acc2:String ): [AccountResponseDTO],
+    activateAccount ( accountId:String, activate:String ): AccountResponseDTO,
+    loginAccount ( loginRequest: LoginRequest): AccountResponseDTO
+}
+
+
+type AccountResponseDTO {
+    id : ID,
+    avatar : String,
+    profile_visits : Int,
+    username : String,
+    email : String,
+    website : String,
+    account_type : String,
+    followings : [AccountResponseDTO],
+    created_at : String,
+    updated_at : String,
+    lastLogin : String,
+    activated : Boolean
+}
+
+input AccountRequestDTO {
+    avatar : String,
+    username : String,
+    password : String,
+    email : String,
+    website : String,
+    account_type : String,
+    current_password : String
+}
+
+input LoginRequest {
+    username : String,
+    password : String
+}

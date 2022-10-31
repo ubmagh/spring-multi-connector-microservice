@@ -8,26 +8,27 @@ import me.ubmagh.springmulticonnectorms.exceptions.AccountIdNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountUsernameNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
 import me.ubmagh.springmulticonnectorms.services.AccountService;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Controller
 @AllArgsConstructor
-@RestController
-@RequestMapping("rest")
-public class AccountController {
+public class AccountsQraphQlController {
 
     private AccountService accountService;
 
-    @GetMapping("/accounts")
+    @QueryMapping
     public List<AccountResponseDTO> getAcountsList(){
         return accountService.getAccountsList();
     }
 
-    @GetMapping("/accounts/{accountId}")
-    public AccountResponseDTO getAcount(@PathVariable("accountId") String accountId){
+    @QueryMapping
+    public AccountResponseDTO getAcount( @Argument String accountId){
         AccountResponseDTO account=null;
         try{
             account = accountService.getAccountById(accountId);
@@ -38,8 +39,8 @@ public class AccountController {
     }
 
 
-    @GetMapping("/search-account/{accountId}")
-    public AccountResponseDTO getAcountByUsername(@PathVariable("username") String username){
+    @QueryMapping
+    public AccountResponseDTO getAcountByUsername(@Argument String username){
         AccountResponseDTO account=null;
         try{
             account = accountService.getAccountByUsername(username);
@@ -50,14 +51,14 @@ public class AccountController {
     }
 
 
-    @PostMapping("/accounts")
-    public AccountResponseDTO createAccount( @RequestBody AccountRequestDTO request){
+    @QueryMapping
+    public AccountResponseDTO createAccount(@Argument AccountRequestDTO request){
         return accountService.createAccount(request);
     }
 
 
-    @PutMapping("/accounts/{accountId}")
-    public AccountResponseDTO updateAccount( @PathVariable("accountId") String accountId, @RequestBody AccountRequestDTO requestDTO ){
+    @QueryMapping
+    public AccountResponseDTO updateAccount( @Argument String accountId, @Argument AccountRequestDTO requestDTO ){
         AccountResponseDTO account=null;
         try{
             account = accountService.updateAccount( accountId, requestDTO);
@@ -70,8 +71,8 @@ public class AccountController {
     }
 
 
-    @DeleteMapping("/accounts/{accountId}")
-    public AccountResponseDTO deleteAccount( @PathVariable("accountId") String accountId ){
+    @QueryMapping
+    public AccountResponseDTO deleteAccount( @Argument String accountId ){
         AccountResponseDTO account=null;
         try{
             account = accountService.deleteAccount( accountId );
@@ -81,8 +82,8 @@ public class AccountController {
         return account;
     }
 
-    @GetMapping("/follow/{acc1}/{acc2}")
-    public List<AccountResponseDTO> following( @PathVariable("acc1") String acc1, @PathVariable("acc2") String acc2 ){
+    @QueryMapping
+    public List<AccountResponseDTO> following( @Argument String acc1, @Argument String acc2 ){
         List<AccountResponseDTO> followings=null;
         try{
             followings = accountService.toggleFollowAccount( acc1, acc2);
@@ -93,8 +94,8 @@ public class AccountController {
     }
 
 
-    @GetMapping("/account-activation/{accountId}/{activate}")
-    public AccountResponseDTO activateAccount( @PathVariable("accountId") String accountId, @PathVariable("activate") String activate ){
+    @QueryMapping
+    public AccountResponseDTO activateAccount( @Argument String accountId, @Argument String activate ){
         boolean do_activate = Integer.parseInt(activate)>0;
         AccountResponseDTO account=null;
         try{
@@ -109,14 +110,14 @@ public class AccountController {
     }
 
 
-    @GetMapping("/accounts-types")
+    @QueryMapping
     public List<String> getAccountsTypes(){
         return accountService.accountTypes();
     }
 
 
-    @PostMapping("/account-login")
-    public AccountResponseDTO loginAccount(@RequestBody LoginRequest loginRequest){
+    @QueryMapping
+    public AccountResponseDTO loginAccount(@Argument LoginRequest loginRequest){
         AccountResponseDTO accountResponseDTO = null;
         try{
             accountResponseDTO = accountService.login(loginRequest);

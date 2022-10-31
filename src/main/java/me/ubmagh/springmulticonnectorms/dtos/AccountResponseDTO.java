@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.ubmagh.springmulticonnectorms.entities.Account;
 import me.ubmagh.springmulticonnectorms.enums.AccountTypeEnum;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class AccountResponseDTO {
     private String website;
     private AccountTypeEnum account_type;
 
-    private List<Account> followings = new ArrayList<>();
+    private List<AccountResponseDTO> followings = new ArrayList<>();
 
     private Date created_at;
     private Date updated_at;

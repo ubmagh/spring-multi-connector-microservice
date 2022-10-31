@@ -35,7 +35,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountTypeEnum account_type;
 
-    @OneToMany
+    @ManyToMany()
     private List<Account> followings = new ArrayList<>();
 
     private Date created_at;
