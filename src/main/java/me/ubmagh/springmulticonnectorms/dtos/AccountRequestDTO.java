@@ -16,12 +16,12 @@ public class AccountRequestDTO {
     private String avatar;
 
     private String username;
-    private char[] password;
+    private String password;
 
     private String email;
     private String website;
     private AccountTypeEnum account_type;
 
-    private char[] current_password;
+    private String current_password;
 
 }

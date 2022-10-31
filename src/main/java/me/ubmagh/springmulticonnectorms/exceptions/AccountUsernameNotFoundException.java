@@ -2,7 +2,7 @@ package me.ubmagh.springmulticonnectorms.exceptions;
 
 public class AccountUsernameNotFoundException extends RuntimeException {
 
-    private String username;
+    private final String username;
 
     public AccountUsernameNotFoundException(String username){
         super("Account With usnermae '"+username+"' was not found !");

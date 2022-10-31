@@ -2,7 +2,7 @@ package me.ubmagh.springmulticonnectorms.exceptions;
 
 public class AccountIdNotFoundException extends RuntimeException {
 
-    private String accountId;
+    private final String accountId;
 
     public AccountIdNotFoundException(String accountId){
         super("Account With Id '"+accountId+"' was not found !");

@@ -72,7 +72,7 @@ public class AccountServiceImpl implements AccountService {
 
         if( accountRequestDTO.getUsername()!=null ) account.setUsername( accountRequestDTO.getUsername() );
         if( accountRequestDTO.getWebsite()!=null ) account.setWebsite( accountRequestDTO.getWebsite() );
-        if( accountRequestDTO.getPassword()!=null ) account.setPassword( accountRequestDTO.getPassword() );
+        if( accountRequestDTO.getPassword()!=null ) account.setPassword( accountRequestDTO.getPassword().toCharArray() );
         if( accountRequestDTO.getAvatar()!=null ) account.setAvatar( accountRequestDTO.getAvatar() );
         if( accountRequestDTO.getAccount_type()!=null ) account.setAccount_type( accountRequestDTO.getAccount_type() );
         if( accountRequestDTO.getEmail()!=null ) account.setEmail( accountRequestDTO.getEmail() );

@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
+@Table(name = "app_accounts")
 public class Account {
 
     @Id
@@ -24,7 +25,7 @@ public class Account {
     private String avatar;
     private int profile_visits;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
     @Transient
     private char[] password;
