@@ -6,6 +6,7 @@ import me.ubmagh.springmulticonnectorms.dtos.LoginRequest;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountIdNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountUsernameNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
+import me.ubmagh.springmulticonnectorms.exceptions.UsernameAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +20,7 @@ public interface AccountService {
     AccountResponseDTO getAccountByUsername( String Username) throws AccountUsernameNotFoundException;
     List<AccountResponseDTO> getAccountsList();
 
-    AccountResponseDTO createAccount( AccountRequestDTO accountRequestDTO);
+    AccountResponseDTO createAccount( AccountRequestDTO accountRequestDTO) throws UsernameAlreadyExistsException;
     AccountResponseDTO updateAccount( String accountId, AccountRequestDTO accountRequestDTO) throws AccountIdNotFoundException, PasswordIncorrectException;
     AccountResponseDTO deleteAccount( String accountId ) throws AccountIdNotFoundException;
 

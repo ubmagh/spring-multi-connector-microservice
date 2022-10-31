@@ -52,13 +52,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
+    public AccountResponseDTO createAccount(AccountRequestDTO accountRequestDTO) throws UsernameAlreadyExistsException {
+        Account check_exists = accountRepository.findByUsername( accountRequestDTO.getUsername() ).orElse(null);
+        if( check_exists!=null )
+            throw new UsernameAlreadyExistsException(accountRequestDTO.getUsername());
         Account account = mapper.fromAccountRequestDTO( accountRequestDTO );
         account.setId( UUID.randomUUID().toString() );
         account.setActivated(false);
-        account.setCreated_at(new Date());
-        accountRepository.save(account);
-        return mapper.fromAccount(account);
+        account.setCreated_at(new Date().getTime());
+        Account saved = accountRepository.save(account);
+        return mapper.fromAccount(saved);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class AccountServiceImpl implements AccountService {
         if( accountRequestDTO.getAvatar()!=null ) account.setAvatar( accountRequestDTO.getAvatar() );
         if( accountRequestDTO.getAccount_type()!=null ) account.setAccount_type( accountRequestDTO.getAccount_type() );
         if( accountRequestDTO.getEmail()!=null ) account.setEmail( accountRequestDTO.getEmail() );
-        account.setUpdated_at(new Date());
+        account.setUpdated_at(new Date().getTime());
 
         Account saved = accountRepository.save(account);
         return mapper.fromAccount(saved);
@@ -126,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findByUsername( loginRequest.getUsername() ).orElseThrow(() -> new AccountUsernameNotFoundException(loginRequest.getUsername()));
         if( !verifyPassword( account.getPassword().toString(), loginRequest.getPassword() ) )
             throw new PasswordIncorrectException();
-        account.setLastLogin(new Date());
+        account.setLastLogin(new Date().getTime());
         Account saved = accountRepository.save(account);
         return mapper.fromAccount(saved);
     }

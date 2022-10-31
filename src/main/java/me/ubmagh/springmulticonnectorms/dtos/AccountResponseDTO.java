@@ -29,9 +29,9 @@ public class AccountResponseDTO {
 
     private List<AccountResponseDTO> followings = new ArrayList<>();
 
-    private Date created_at;
-    private Date updated_at;
-    private Date lastLogin;
+    private Long created_at;
+    private Long updated_at;
+    private Long lastLogin;
 
     private boolean activated;
 }

@@ -8,7 +8,6 @@ import me.ubmagh.springmulticonnectorms.enums.AccountTypeEnum;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -38,9 +37,9 @@ public class Account {
     @ManyToMany()
     private List<Account> followings = new ArrayList<>();
 
-    private Date created_at;
-    private Date updated_at;
-    private Date lastLogin;
+    private Long created_at;
+    private Long updated_at;
+    private Long lastLogin;
 
     private boolean activated;
 }

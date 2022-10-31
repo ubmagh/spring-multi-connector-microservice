@@ -1,4 +1,4 @@
-package me.ubmagh.springmulticonnectorms.web;
+package me.ubmagh.springmulticonnectorms.web.graphQl;
 
 import lombok.AllArgsConstructor;
 import me.ubmagh.springmulticonnectorms.dtos.AccountRequestDTO;
@@ -7,8 +7,10 @@ import me.ubmagh.springmulticonnectorms.dtos.LoginRequest;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountIdNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountUsernameNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
+import me.ubmagh.springmulticonnectorms.exceptions.UsernameAlreadyExistsException;
 import me.ubmagh.springmulticonnectorms.services.AccountService;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -51,13 +53,19 @@ public class AccountsQraphQlController {
     }
 
 
-    @QueryMapping
+    @MutationMapping
     public AccountResponseDTO createAccount(@Argument AccountRequestDTO request){
-        return accountService.createAccount(request);
+        AccountResponseDTO account = null;
+        try{
+            account = accountService.createAccount(request);
+        }catch( UsernameAlreadyExistsException exc){
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, exc.getMessage() );
+        }
+        return account;
     }
 
 
-    @QueryMapping
+    @MutationMapping
     public AccountResponseDTO updateAccount( @Argument String accountId, @Argument AccountRequestDTO requestDTO ){
         AccountResponseDTO account=null;
         try{
@@ -71,7 +79,7 @@ public class AccountsQraphQlController {
     }
 
 
-    @QueryMapping
+    @MutationMapping
     public AccountResponseDTO deleteAccount( @Argument String accountId ){
         AccountResponseDTO account=null;
         try{
@@ -82,7 +90,7 @@ public class AccountsQraphQlController {
         return account;
     }
 
-    @QueryMapping
+    @MutationMapping
     public List<AccountResponseDTO> following( @Argument String acc1, @Argument String acc2 ){
         List<AccountResponseDTO> followings=null;
         try{
@@ -94,7 +102,7 @@ public class AccountsQraphQlController {
     }
 
 
-    @QueryMapping
+    @MutationMapping
     public AccountResponseDTO activateAccount( @Argument String accountId, @Argument String activate ){
         boolean do_activate = Integer.parseInt(activate)>0;
         AccountResponseDTO account=null;
@@ -116,7 +124,7 @@ public class AccountsQraphQlController {
     }
 
 
-    @QueryMapping
+    @MutationMapping
     public AccountResponseDTO loginAccount(@Argument LoginRequest loginRequest){
         AccountResponseDTO accountResponseDTO = null;
         try{

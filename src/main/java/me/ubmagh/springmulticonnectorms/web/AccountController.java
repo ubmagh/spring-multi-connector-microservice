@@ -7,8 +7,10 @@ import me.ubmagh.springmulticonnectorms.dtos.LoginRequest;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountIdNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountUsernameNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
+import me.ubmagh.springmulticonnectorms.exceptions.UsernameAlreadyExistsException;
 import me.ubmagh.springmulticonnectorms.services.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,7 +54,13 @@ public class AccountController {
 
     @PostMapping("/accounts")
     public AccountResponseDTO createAccount( @RequestBody AccountRequestDTO request){
-        return accountService.createAccount(request);
+        AccountResponseDTO account = null;
+        try{
+            account = accountService.createAccount(request);
+        }catch( UsernameAlreadyExistsException exc){
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, exc.getMessage() );
+        }
+        return account;
     }
 
 
@@ -124,6 +132,11 @@ public class AccountController {
             throw new ResponseStatusException( HttpStatus.NOT_FOUND, exc.getMessage() );
         }
         return accountResponseDTO;
+    }
+
+    @ExceptionHandler( ResponseStatusException.class)
+    public ResponseEntity<String> exceptionHandler(ResponseStatusException exc){
+        return new ResponseEntity<>(exc.getReason(), exc.getStatus() );
     }
 
 }

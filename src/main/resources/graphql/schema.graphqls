@@ -24,9 +24,9 @@ type AccountResponseDTO {
     website : String,
     account_type : String,
     followings : [AccountResponseDTO],
-    created_at : String,
-    updated_at : String,
-    lastLogin : String,
+    created_at : Float,
+    updated_at : Float,
+    lastLogin : Float,
     activated : Boolean
 }
 
