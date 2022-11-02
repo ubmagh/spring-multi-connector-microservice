@@ -1,4 +1,4 @@
-package me.ubmagh.springmulticonnectorms.services;
+package me.ubmagh.springmulticonnectorms.web.Soap;
 
 import lombok.AllArgsConstructor;
 import me.ubmagh.springmulticonnectorms.dtos.AccountRequestDTO;
@@ -12,7 +12,11 @@ import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
 import me.ubmagh.springmulticonnectorms.exceptions.UsernameAlreadyExistsException;
 import me.ubmagh.springmulticonnectorms.mappers.AccountsMapper;
 import me.ubmagh.springmulticonnectorms.repositories.AccountRepository;
+import me.ubmagh.springmulticonnectorms.services.AccountService;
 import org.springframework.stereotype.Service;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -21,15 +25,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
 @Transactional
 @AllArgsConstructor
-public class AccountServiceImpl implements AccountService {
+@Endpoint
+public class SoapAccountService implements AccountService {
 
     private AccountRepository accountRepository;
     private AccountsMapper mapper;
+    private static final String NAMESPACE_URI  = "http://ubmagh.me/xml/account";
+
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAccountByIdRequest")
+    @ResponsePayload
     public AccountResponseDTO getAccountById(String accountId) throws AccountIdNotFoundException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
         if( account.isActivated())
@@ -38,6 +46,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAccountByUsernameRequest")
+    @ResponsePayload
     public AccountResponseDTO getAccountByUsername(String Username) throws AccountUsernameNotFoundException {
         Account account = accountRepository.findByUsername( Username ).orElseThrow(() -> new AccountUsernameNotFoundException(Username));
         if( account.isActivated())
@@ -46,12 +56,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAccountsListRequest")
+    @ResponsePayload
     public List<AccountResponseDTO> getAccountsList() {
         List<Account> accounts = accountRepository.findAll();
         return accounts.stream().map(account -> mapper.fromAccount(account)).collect(Collectors.toList());
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "CreateAccountRequest")
+    @ResponsePayload
     public AccountResponseDTO createAccount(AccountRequestDTO accountRequestDTO) throws UsernameAlreadyExistsException {
         Account check_exists = accountRepository.findByUsername( accountRequestDTO.getUsername() ).orElse(null);
         if( check_exists!=null )
@@ -65,6 +79,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "UpdateAccountRequest")
+    @ResponsePayload
     public AccountResponseDTO updateAccount( String accountId, AccountRequestDTO accountRequestDTO) throws AccountIdNotFoundException, PasswordIncorrectException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
         Account check_exists = accountRepository.findByUsername( accountRequestDTO.getUsername() ).orElse(null);
@@ -88,6 +104,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DeleteAccountRequest")
+    @ResponsePayload
     public AccountResponseDTO deleteAccount(String accountId) throws AccountIdNotFoundException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
         accountRepository.deleteById(accountId);
@@ -95,6 +113,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "ToggleFollowRequest")
+    @ResponsePayload
     public List<AccountResponseDTO> toggleFollowAccount(String account1Id, String Account2Id) throws AccountIdNotFoundException {
         Account account1 = accountRepository.findById( account1Id ).orElseThrow(() -> new AccountIdNotFoundException(account1Id));
         Account account2 = accountRepository.findById( Account2Id ).orElseThrow(() -> new AccountIdNotFoundException(Account2Id));
@@ -104,6 +124,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "ActivateAccountRequest")
+    @ResponsePayload
     public AccountResponseDTO activateAccount(String accountId) throws AccountIdNotFoundException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
         account.setActivated(true);
@@ -112,6 +134,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "DesactivateAccountRequest")
+    @ResponsePayload
     public AccountResponseDTO desactivateAccount(String accountId) throws AccountIdNotFoundException {
         Account account = accountRepository.findById( accountId ).orElseThrow(() -> new AccountIdNotFoundException(accountId));
         account.setActivated(false);
@@ -120,11 +144,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetAccountsTypesRequest")
+    @ResponsePayload
     public List<String> accountTypes() {
         return Arrays.stream(AccountTypeEnum.values()).toList().stream().map(e->e.name()).collect(Collectors.toList());
     }
 
     @Override
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "LoginRequestMeth")
+    @ResponsePayload
     public AccountResponseDTO login(LoginRequest loginRequest) throws AccountUsernameNotFoundException, PasswordIncorrectException {
         Account account = accountRepository.findByUsername( loginRequest.getUsername() ).orElseThrow(() -> new AccountUsernameNotFoundException(loginRequest.getUsername()));
         if( !verifyPassword( account.getPassword().toString(), loginRequest.getPassword() ) )
