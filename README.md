@@ -5,6 +5,11 @@
 * content : 
 
 
+1. [Project :](README/#project_:)
+2. [Details ](README/#details_)
+3. [Tests : ](README/#tests_:_)
+
+
 
 <br>
 
@@ -587,3 +592,12 @@ public class SpringMultiConnectorMsApplication {
 <br>
 
 > end.<
+## Table of Contents
+
+1. [HELP](/HELP)
+	1. [Reference Documentation](HELP/#reference_documentation)
+	2. [Guides](HELP/#guides)
+2. [README](/README)
+	1. [Project :](README/#project_:)
+	2. [Details ](README/#details_)
+	3. [Tests : ](README/#tests_:_)
