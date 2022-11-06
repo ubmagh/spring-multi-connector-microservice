@@ -1,19 +1,36 @@
 package me.ubmagh.springmulticonnectorms;
 
 import com.github.javafaker.Faker;
+import jakarta.xml.ws.Endpoint;
+import lombok.extern.slf4j.Slf4j;
 import me.ubmagh.springmulticonnectorms.dtos.AccountRequestDTO;
 import me.ubmagh.springmulticonnectorms.enums.AccountTypeEnum;
 import me.ubmagh.springmulticonnectorms.services.AccountService;
+import me.ubmagh.springmulticonnectorms.web.Soap.SoapAccountWebService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+@Slf4j
 @SpringBootApplication
 public class SpringMultiConnectorMsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringMultiConnectorMsApplication.class, args);
+    }
+
+
+    @Value("${server.soap-service-port}")
+    private String port;
+
+    @Bean(name = "SoapEndPointServiceBean")
+    public Endpoint endpoint(AccountService accountService) {
+        String url = "http://localhost:"+port+"/";
+        Endpoint endpoint = Endpoint.publish(url, new SoapAccountWebService(accountService));
+        log.info(" 🚀 Soap service started on :  "+url);
+        return endpoint;
     }
 
 
