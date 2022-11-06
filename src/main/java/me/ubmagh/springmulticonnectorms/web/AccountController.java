@@ -18,7 +18,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("rest")
+@RequestMapping("rest-api")
 public class AccountController {
 
     private AccountService accountService;

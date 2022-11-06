@@ -14,6 +14,4 @@ public enum AccountTypeEnum {
         return valueOf(v);
     }
 
-
-
 }

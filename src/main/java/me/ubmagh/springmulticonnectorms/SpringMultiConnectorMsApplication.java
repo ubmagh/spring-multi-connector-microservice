@@ -21,8 +21,6 @@ public class SpringMultiConnectorMsApplication {
         SpringApplication.run(SpringMultiConnectorMsApplication.class, args);
     }
 
-
-
     @Value("${server.soap-service-url}")
     private String url;
 
