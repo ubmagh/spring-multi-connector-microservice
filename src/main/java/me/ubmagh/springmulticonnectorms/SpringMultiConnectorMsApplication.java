@@ -22,12 +22,12 @@ public class SpringMultiConnectorMsApplication {
     }
 
 
-    @Value("${server.soap-service-port}")
-    private String port;
+
+    @Value("${server.soap-service-url}")
+    private String url;
 
     @Bean(name = "SoapEndPointServiceBean")
     public Endpoint endpoint(AccountService accountService) {
-        String url = "http://localhost:"+port+"/";
         Endpoint endpoint = Endpoint.publish(url, new SoapAccountWebService(accountService));
         log.info(" 🚀 Soap service started on :  "+url);
         return endpoint;

@@ -2,12 +2,11 @@ package me.ubmagh.springmulticonnectorms.web.Soap;
 
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
-import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
-import jakarta.xml.ws.WebEndpoint;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.ubmagh.springmulticonnectorms.dtos.AccountRequestDTO;
 import me.ubmagh.springmulticonnectorms.dtos.AccountResponseDTO;
+import me.ubmagh.springmulticonnectorms.dtos.LoginRequest;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountIdNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.AccountUsernameNotFoundException;
 import me.ubmagh.springmulticonnectorms.exceptions.PasswordIncorrectException;
@@ -16,10 +15,9 @@ import me.ubmagh.springmulticonnectorms.services.AccountService;
 
 import java.util.List;
 
-//@WebService(name = "AccountsService", targetNamespace = "http://github.com/ubmagh")
 @WebService( name = "Accounts", serviceName = "AccountService" )
 @Slf4j
-public class SoapAccountWebService /*implements AccountService*/ {
+public class SoapAccountWebService  {
 
     private AccountService accountService;
 
@@ -28,29 +26,20 @@ public class SoapAccountWebService /*implements AccountService*/ {
     }
 
     public String hello (){
-        log.info("==============================>");
-        return "Hello wolld:!";
+        return "Hello wolld !";
     }
+
 
     @WebMethod( operationName = "GetAccountById")
     public AccountResponseDTO getAccountById( @WebParam(name = "accountId") String accountId)  throws AccountIdNotFoundException {
-        log.info("==============================>2");
-        AccountResponseDTO account = null;
-        account = this.accountService.getAccountById(accountId);
+        AccountResponseDTO account = this.accountService.getAccountById(accountId);
         return account;
     }
 
 
-    /*
-
     @WebMethod( operationName = "GetAccountByUsername")
-    public AccountResponseDTO getAccountByUsername( @WebParam(name = "Username") String Username)  {
-        AccountResponseDTO account = null;
-        try{
-            account = this.accountService.getAccountByUsername(Username);
-        }catch (AccountUsernameNotFoundException exc){
-
-        }
+    public AccountResponseDTO getAccountByUsername( @WebParam(name = "Username") String Username) throws AccountUsernameNotFoundException {
+        AccountResponseDTO account =  this.accountService.getAccountByUsername(Username);
         return account;
     }
 
@@ -63,75 +52,43 @@ public class SoapAccountWebService /*implements AccountService*/ {
 
 
     @WebMethod( operationName = "CreateAccount")
-    public AccountResponseDTO createAccount( @WebParam(name = "accountRequestDTO") AccountRequestDTO accountRequestDTO) {
-        AccountResponseDTO responseDTO = null;
-        try{
-            responseDTO = accountService.createAccount(accountRequestDTO);
-        }catch (UsernameAlreadyExistsException exc){
-
-        }
+    public AccountResponseDTO createAccount( @WebParam(name = "accountRequestDTO") AccountRequestDTO accountRequestDTO) throws UsernameAlreadyExistsException {
+        AccountResponseDTO responseDTO = accountService.createAccount(accountRequestDTO);
         return responseDTO;
     }
 
     
     @WebMethod( operationName = "UpdateAccount")
-    public AccountResponseDTO updateAccount( @WebParam(name = "accountId") String accountId, @WebParam(name = "accountRequestDTO") AccountRequestDTO accountRequestDTO) {
-        AccountResponseDTO account = null;
-        try{
-            account = accountService.updateAccount(accountId, accountRequestDTO); // # todo
-        }catch (AccountIdNotFoundException exc){
-
-        } catch ( PasswordIncorrectException exc) {
-
-        }
+    public AccountResponseDTO updateAccount( @WebParam(name = "accountId") String accountId, @WebParam(name = "accountRequestDTO") AccountRequestDTO accountRequestDTO) throws PasswordIncorrectException, AccountIdNotFoundException {
+        AccountResponseDTO account = accountService.updateAccount(accountId, accountRequestDTO);
         return account;
     }
 
     
     @WebMethod( operationName = "DeleteAccount")
-    public AccountResponseDTO deleteAccount( @WebParam(name = "accountId") String accountId) {
-        AccountResponseDTO account = null;
-        try{
-            account = accountService.deleteAccount(accountId); // # todo
-        }catch (AccountIdNotFoundException exc){
-
-        }
+    public AccountResponseDTO deleteAccount( @WebParam(name = "accountId") String accountId) throws AccountIdNotFoundException {
+        AccountResponseDTO account = accountService.deleteAccount(accountId);
         return account;
     }
 
     
     @WebMethod( operationName = "ToggleFollowAccount")
-    public List<AccountResponseDTO> toggleFollowAccount( @WebParam(name = "account1Id") String account1Id, @WebParam(name = "Account2Id") String Account2Id) {
-        List<AccountResponseDTO> accounts = null;
-        try{
-            accounts = accountService.toggleFollowAccount( account1Id, Account2Id); // # todo
-        }catch (AccountIdNotFoundException exc){
-
-        }
+    public List<AccountResponseDTO> toggleFollowAccount( @WebParam(name = "account1Id") String account1Id, @WebParam(name = "Account2Id") String Account2Id) throws AccountIdNotFoundException {
+        List<AccountResponseDTO> accounts =  accountService.toggleFollowAccount( account1Id, Account2Id);
         return accounts;
     }
 
     
     @WebMethod( operationName = "ActivateAccount")
-    public AccountResponseDTO activateAccount( @WebParam(name = "accountId") String accountId) {
-        AccountResponseDTO account = null;
-        try{
-            account = accountService.activateAccount( accountId); // # todo
-        }catch (AccountIdNotFoundException exc){
-
-        }
+    public AccountResponseDTO activateAccount( @WebParam(name = "accountId") String accountId) throws AccountIdNotFoundException {
+        AccountResponseDTO account = accountService.activateAccount( accountId);
         return account;
     }
 
     
     @WebMethod( operationName = "DesactivateAccount")
-    public AccountResponseDTO desactivateAccount( @WebParam(name = "accountId") String accountId) {
-        AccountResponseDTO account = null;
-        try{
-            account = accountService.desactivateAccount( accountId); // # todo
-        }catch (AccountIdNotFoundException exc){
-
-        }
+    public AccountResponseDTO desactivateAccount( @WebParam(name = "accountId") String accountId) throws AccountIdNotFoundException {
+        AccountResponseDTO account = accountService.desactivateAccount( accountId);
         return account;
     }
 
@@ -143,18 +100,10 @@ public class SoapAccountWebService /*implements AccountService*/ {
 
     
     @WebMethod( operationName = "Login")
-    public AccountResponseDTO login( @WebParam(name = "loginRequest") LoginRequest loginRequest) {
-        AccountResponseDTO account = null;
-        try{
-            account = accountService.login( loginRequest); // # todo
-        }catch (AccountUsernameNotFoundException exc){
-
-        }catch (PasswordIncorrectException exc){
-
-        }
+    public AccountResponseDTO login( @WebParam(name = "loginRequest") LoginRequest loginRequest) throws PasswordIncorrectException, AccountUsernameNotFoundException {
+        AccountResponseDTO account = accountService.login( loginRequest);
         return account;
     }
 
-     */
 
 }
